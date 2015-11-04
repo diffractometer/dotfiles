@@ -1,5 +1,26 @@
+"leader
+let mapleader = ","
+
 "powerline
 set guifont=Source\ Code\ Pro\ for\ Powerline:h12
+let g:airline_powerline_fonts = 1
+
+if has('vim_starting')
+  if &compatible
+    set nocompatible " Be iMproved
+  endif
+endif
+
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+
+syntax on
 
 " Plug check and auto install
 let iCanHazVimPlug=1
@@ -12,21 +33,14 @@ if !filereadable(VimplugReadme)
   let iCanHazVimPlug=0
 endif
 
-if has('vim_starting')
-  if &compatible
-    set nocompatible " Be iMproved
-  endif
-endif
-
+" Vim Plug
+"
+"
 call plug#begin('~/.vim/plugged')
 
-"unite
-Plug 'Shougo/unite.vim'
 Plug 'Shougo/vimproc', {'do' : 'make'}
 
-call plug#end()
-
-Plug 'flazz/vim-colorschemes'
+"Plug 'flazz/vim-colorschemes'
 Plug 'vim-scripts/ScrollColors'
 Plug 'freeo/vim-kalisi'
 Plug 'junegunn/seoul256.vim'
@@ -38,6 +52,7 @@ Plug 'digitaltoad/vim-jade'
 Plug 'bling/vim-airline'
 Plug 't9md/vim-choosewin'
 Plug 'scrooloose/nerdtree'
+Plug 'Shougo/unite.vim'
 Plug 'scrooloose/nerdcommenter'
 Plug 'junegunn/vim-easy-align'
 Plug 'kchmck/vim-coffee-script'
@@ -46,9 +61,12 @@ Plug 'xolox/vim-session'
 Plug 'Raimondi/delimitMate'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-fugitive'
+Plug 'keith/swift.vim'
 Plug 'kshenoy/vim-origami'
 Plug 'christoomey/vim-tmux-navigator'
+Plug 'scrooloose/syntastic'
 Plug 'xolox/vim-notes'
+Plug 'reedes/vim-lexical'
 
 "clojure
 Plug 'tpope/vim-classpath'
@@ -59,27 +77,25 @@ Plug 'jpalardy/vim-slime'
 Plug 'slim-template/vim-slim'
 Plug 'scrooloose/syntastic'
 
-"filetype plugin indent on " required
-
-"" Installation check.
-"if iCanHazVimPlug == 0
-  "echo "Installing Bundles, please ignore key map error messages"
-  "echo ""
-  ":PlugInstall
-"endif
-
+" Add plugins to &runtimepath
 call plug#end()
 
-" colorscheme blacklight
-" colorscheme tomorrow-night-eighties
-" colorscheme proton
-" colorscheme hybrid-light
-" colorscheme matrix
+filetype plugin indent on     " Required!
+
+augroup lexical
+  autocmd!
+  autocmd FileType markdown,mkd call lexical#init()
+  autocmd FileType textile call lexical#init()
+  autocmd FileType text call lexical#init({ 'spell': 0 })
+augroup END
+
 colorscheme kalisi
 set background=dark
 set t_Co=256
+" in case t_Co alone doesn't work, add this as well:
+let &t_AB="\e[48;5;%dm"
+let &t_AF="\e[38;5;%dm"
 let g:airline_theme="kalisi"
-let g:airline_powerline_fonts = 1
 
 " Numbers and Borders`
 set number
@@ -112,8 +128,6 @@ set undofile
 set undolevels=1000
 set undoreload=10000
 
-"Lynn Settings
-let mapleader = ","
 
 " hilight indention tabs
 hi NonText ctermfg=darkgrey guifg=#565656
@@ -121,10 +135,11 @@ hi clear SpecialKey
 hi link SpecialKey NonText
 
 " nvim settings
-
 let g:indentLine_color_term=238
 let g:indentLine_color_gui='#565656'
 let g:indentLine_char='â€¢'
+
+let g:syntastic_javascript_checkers = ['eslint']
 
 set encoding=utf-8
 set modeline                   " i don't even know
@@ -178,6 +193,38 @@ set clipboard=unnamed
 if has("gui")
   set macmeta "use option (alt) as meta key
 endif
+
+" nerd tree cusomiz
+let g:NERDTreeDirArrows = 1
+let g:NERDTreeDirArrowExpandable = '▸'
+let g:NERDTreeDirArrowCollapsible = '▾'
+
+" NERDTress File highlighting
+function! NERDTreeHighlightFile(extension, fg, bg, guifg, guibg)
+ exec 'autocmd filetype nerdtree highlight ' . a:extension .' ctermbg='. a:bg .' ctermfg='. a:fg .' guibg='. a:guibg .' guifg='. a:guifg
+ exec 'autocmd filetype nerdtree syn match ' . a:extension .' #^\s\+.*'. a:extension .'$#'
+endfunction
+
+call NERDTreeHighlightFile('jade', 'green', 'none', 'green', '#151515')
+call NERDTreeHighlightFile('ini', 'yellow', 'none', 'yellow', '#151515')
+call NERDTreeHighlightFile('md', 'blue', 'none', '#3366FF', '#151515')
+call NERDTreeHighlightFile('yml', 'yellow', 'none', 'yellow', '#151515')
+call NERDTreeHighlightFile('config', 'yellow', 'none', 'yellow', '#151515')
+call NERDTreeHighlightFile('conf', 'yellow', 'none', 'yellow', '#151515')
+call NERDTreeHighlightFile('json', 'yellow', 'none', 'yellow', '#151515')
+call NERDTreeHighlightFile('html', 'yellow', 'none', 'yellow', '#151515')
+call NERDTreeHighlightFile('styl', 'cyan', 'none', 'cyan', '#151515')
+call NERDTreeHighlightFile('css', 'cyan', 'none', 'cyan', '#151515')
+call NERDTreeHighlightFile('coffee', 'Red', 'none', 'red', '#151515')
+call NERDTreeHighlightFile('js', 'Red', 'none', '#ff00ff', '#151515')
+call NERDTreeHighlightFile('php', 'Magenta', 'none', '#ff00ff', '#151515')
+
+"NERDTree
+nmap <silent> <C-a> :NERDTreeToggle<CR>
+let NERDTreeHighlightCursorline=1
+let NERDTreeIgnore=['.vim$', '\~$', '.*\.pyc$', 'pip-log\.txt$', 'whoosh_index', 'xapian_index', '.*.pid', 'monitor.py', '.*-fixtures-.*.json', '.*\.o$', 'db.db']
+let NERDTreeMinimalUI = 1
+let NERDTreeDirArrows = 1
 
 
 "Make Vim able to edit crontab files again.
@@ -239,24 +286,12 @@ inoremap <leader>l <C-O>:nohls<CR>
 set wildignore+=classes
 set wildignore+=lib
 
-" syntastic
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
 
-let g:syntastic_javascript_checkers = ['eslint']
 
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 0
 
-"NERDTree
-nmap <silent> <C-a> :NERDTreeToggle<CR>
-let NERDTreeHighlightCursorline=1
-let NERDTreeIgnore=['.vim$', '\~$', '.*\.pyc$', 'pip-log\.txt$', 'whoosh_index', 'xapian_index', '.*.pid', 'monitor.py', '.*-fixtures-.*.json', '.*\.o$', 'db.db']
-let NERDTreeMinimalUI = 1
-let NERDTreeDirArrows = 1
+
+
+
 
 " Choosewin
 nmap  -  <Plug>(choosewin)
@@ -354,20 +389,11 @@ noremap <C-j> <C-w>j
 noremap <C-k> <C-w>k
 noremap <C-l> <C-w>l
 
-" now do the same for terminal
-"tnoremap <Esc> <C-\><C-n>
-"tnoremap <C-h> <C-\><C-n><C-w>h
-"tnoremap <C-j> <C-\><C-n><C-w>j
-"tnoremap <C-k> <C-\><C-n><C-w>k
-"tnoremap <C-l> <C-\><C-n><C-w>l
 nnoremap <C-h> <C-w>h
 nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
-
 set noea
-
-
 
 let g:tmux_navigator_no_mappings = 1
 
@@ -401,5 +427,3 @@ fu! CustomFoldText()
     let expansionString = repeat(".", w - strwidth(foldSizeStr.line.foldLevelStr.foldPercentage))
     return line . expansionString . foldSizeStr . foldPercentage . foldLevelStr
 endf
-
-

@@ -6,8 +6,9 @@ set guifont=Source\ Code\ Pro\ for\ Powerline:h12
 let g:airline_powerline_fonts = 1
 
 if has('vim_starting')
-	set nocompatible               " Be iMproved
-	set runtimepath+=~/.vim/bundle/neobundle.vim/
+  if &compatible
+    set nocompatible " Be iMproved
+  endif
 endif
 
 set statusline+=%#warningmsg#
@@ -21,21 +22,25 @@ let g:syntastic_check_on_wq = 0
 
 syntax on
 
+" Plug check and auto install
+let iCanHazVimPlug=1
+let VimplugReadme=expand('~/.vim/autoload/plug.vim')
+if !filereadable(VimplugReadme)
+  echo "Installing VimPlug.."
+  echo ""
+  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs 
+    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  let iCanHazVimPlug=0
+endif
+
 " Vim Plug
 "
 "
 call plug#begin('~/.vim/plugged')
 
-Plug 'Shougo/vimproc', {
-  \ 'build' : {
-  \     'windows' : 'make -f make_mingw32.mak',
-  \     'cygwin' : 'make -f make_cygwin.mak',
-  \     'mac' : 'make -f make_mac.mak',
-  \     'unix' : 'make -f make_unix.mak',
-  \    },
-  \ }
+Plug 'Shougo/vimproc', {'do' : 'make'}
 
-" Plug 'flazz/vim-colorschemes'
+"Plug 'flazz/vim-colorschemes'
 Plug 'vim-scripts/ScrollColors'
 Plug 'freeo/vim-kalisi'
 Plug 'junegunn/seoul256.vim'
@@ -60,6 +65,7 @@ Plug 'keith/swift.vim'
 Plug 'kshenoy/vim-origami'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'scrooloose/syntastic'
+Plug 'xolox/vim-notes'
 
 "clojure
 Plug 'tpope/vim-classpath'
@@ -68,43 +74,22 @@ Plug 'guns/vim-clojure-static'
 Plug 'kien/rainbow_parentheses.vim'
 Plug 'jpalardy/vim-slime'
 Plug 'slim-template/vim-slim'
+Plug 'scrooloose/syntastic'
+
+Plug 'Valloric/YouCompleteMe', { 'do': './install.py' }
 
 " Add plugins to &runtimepath
 call plug#end()
 
-
-
-
-
-
-
 filetype plugin indent on     " Required!
-"
-" Brief help
-" :NeoBundleList          - list configured bundles
-" :NeoBundleInstall(!)    - install(update) bundles
-" :NeoBundleClean(!)      - confirm(or auto-approve) removal of unused bundles
-
-" Installation check.
-" NeoBundleCheck
-
-" colorscheme telstar
-" colorscheme up
-" colorscheme blacklight
 
 colorscheme kalisi
-" set background=light
-" or 
 set background=dark
-" if you don't set the background, the light theme will be usede 'https://github.com/freeo/vim-kalisi'
-
 set t_Co=256
-
 " in case t_Co alone doesn't work, add this as well:
 let &t_AB="\e[48;5;%dm"
 let &t_AF="\e[38;5;%dm"
-
-let g:airline_theme='kalisi'
+let g:airline_theme="kalisi"
 
 " Numbers and Borders`
 set number
@@ -138,17 +123,16 @@ set undolevels=1000
 set undoreload=10000
 
 
-
 " hilight indention tabs
 hi NonText ctermfg=darkgrey guifg=#565656
 hi clear SpecialKey
 hi link SpecialKey NonText
 
+" nvim settings
 let g:indentLine_color_term=238
 let g:indentLine_color_gui='#565656'
 let g:indentLine_char='â€¢'
 
-" lynn's anal highlighting 
 let g:syntastic_javascript_checkers = ['eslint']
 
 set encoding=utf-8
@@ -200,19 +184,6 @@ set showmatch         " Show briefly matching bracket when closing it.
 "use system clipboard
 set clipboard=unnamed
 
-function! ClipboardYank()
-  call system('pbcopy', @@)
-endfunction
-function! ClipboardPaste()
-  let @@ = system('pbpaste')
-endfunction
-
-vnoremap <silent> y y:call ClipboardYank()<cr>
-vnoremap <silent> d d:call ClipboardYank()<cr>
-nnoremap <silent> p :call ClipboardPaste()<cr>
-
-:let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
-
 if has("gui")
   set macmeta "use option (alt) as meta key
 endif
@@ -249,6 +220,7 @@ let NERDTreeIgnore=['.vim$', '\~$', '.*\.pyc$', 'pip-log\.txt$', 'whoosh_index',
 let NERDTreeMinimalUI = 1
 let NERDTreeDirArrows = 1
 
+
 "Make Vim able to edit crontab files again.
 set backupskip=/tmp/*,/private/tmp/*
 
@@ -261,7 +233,7 @@ set shiftwidth=2
 set softtabstop=2
 set expandtab
 set wrap
-"set textwidth=80
+set textwidth=80
 set formatoptions=qrn1
 "set colorcolumn=+1
 "}}}
@@ -307,6 +279,11 @@ inoremap <leader>l <C-O>:nohls<CR>
 "Clojure/Leiningen
 set wildignore+=classes
 set wildignore+=lib
+
+
+
+
+
 
 
 
@@ -405,6 +382,11 @@ noremap <C-h> <C-w>h
 noremap <C-j> <C-w>j
 noremap <C-k> <C-w>k
 noremap <C-l> <C-w>l
+
+nnoremap <C-h> <C-w>h
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-l> <C-w>l
 set noea
 
 let g:tmux_navigator_no_mappings = 1
@@ -439,4 +421,9 @@ fu! CustomFoldText()
     let expansionString = repeat(".", w - strwidth(foldSizeStr.line.foldLevelStr.foldPercentage))
     return line . expansionString . foldSizeStr . foldPercentage . foldLevelStr
 endf
+
+
+
+
+
 

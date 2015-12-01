@@ -77,6 +77,8 @@ Plug 'jpalardy/vim-slime'
 Plug 'slim-template/vim-slim'
 Plug 'scrooloose/syntastic'
 
+Plug 'Valloric/YouCompleteMe', { 'do': './install.py' }
+
 " Add plugins to &runtimepath
 call plug#end()
 
@@ -127,7 +129,6 @@ set undodir=~/.vim/undodir
 set undofile
 set undolevels=1000
 set undoreload=10000
-
 
 " hilight indention tabs
 hi NonText ctermfg=darkgrey guifg=#565656
@@ -194,10 +195,20 @@ if has("gui")
   set macmeta "use option (alt) as meta key
 endif
 
-" nerd tree cusomiz
+" nerd tree cusomize
 let g:NERDTreeDirArrows = 1
 let g:NERDTreeDirArrowExpandable = '▸'
 let g:NERDTreeDirArrowCollapsible = '▾'
+
+
+" ----------------------------------------
+"delimitMate
+let g:delimitMate_expand_cr          = 1
+let g:delimitMate_expand_space       = 1
+let g:delimitMate_smart_matchpairs   = 1
+let g:delimitMate_smart_quotes       = 1
+let g:delimitMate_balance_matchpairs = 1
+let g:delimitMate_autoclose          = 1
 
 " NERDTress File highlighting
 function! NERDTreeHighlightFile(extension, fg, bg, guifg, guibg)

@@ -221,6 +221,17 @@ let NERDTreeMinimalUI = 1
 let NERDTreeDirArrows = 1
 
 
+
+" ----------------------------------------
+"delimitMate
+let g:delimitMate_expand_cr          = 1
+let g:delimitMate_expand_space       = 1
+let g:delimitMate_smart_matchpairs   = 1
+let g:delimitMate_smart_quotes       = 1
+let g:delimitMate_balance_matchpairs = 1
+let g:delimitMate_autoclose          = 1
+
+
 "Make Vim able to edit crontab files again.
 set backupskip=/tmp/*,/private/tmp/*
 

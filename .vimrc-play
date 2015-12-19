@@ -2,7 +2,7 @@
 let mapleader = ","
 
 "powerline
-set guifont=Source\ Code\ Pro\ for\ Powerline:h12
+set guifont=Source\ Code\ Pro\ for\ Powerline:h13
 let g:airline_powerline_fonts = 1
 
 if has('vim_starting')

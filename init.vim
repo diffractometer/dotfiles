@@ -420,3 +420,6 @@ endfunction
 nnoremap <leader>d :$
 
 autocmd! FileType clojure,scheme,lisp,racket,hy :autocmd! Parinfer BufEnter <buffer>
+
+" Don't over-ride yanked shit!
+xnoremap p "_dP

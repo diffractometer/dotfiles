@@ -1,3 +1,5 @@
+let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
+
 let mapleader = ","
 
 "powerline
@@ -43,23 +45,7 @@ function! BuildComposer(info)
   endif
 endfunction
 
-function! BuildComposer(info)
-  if a:info.status != 'unchanged' || a:info.force
-    if has('nvim')
-      !cargo build --release
-    else
-      !cargo build --release --no-default-features --features json-rpc
-    endif
-  endif
-endfunction
-
 call plug#begin('~/.config/nvim/plugged')
-
-" Kotlin
-Plug 'udalov/kotlin-vim'
-
-" Typescript
-Plug 'leafgarland/typescript-vim'
 
 " colorschemes ;)
 Plug 'rafi/awesome-vim-colorschemes'
@@ -68,16 +54,13 @@ Plug 'reedes/vim-colors-pencil'
 Plug 'junegunn/seoul256.vim'
 Plug 'mhinz/vim-janah'
 Plug 'owickstrom/vim-colors-paramount'
-Plug 'whatyouhide/vim-gotham'
-Plug 'ajmwagar/vim-deus'
 
 " markdown
 Plug 'euclio/vim-markdown-composer', { 'do': function('BuildComposer') }
 
 " useful stuff
 Plug 'Shougo/vimproc', {'do' : 'make'}
-"Plug 'neovim/node-host', { 'tag': 'v0.0.1', 'do': 'npm install -g neovim' }
-Plug 'neovim/node-host'
+Plug 'neovim/node-host', { 'tag': 'v0.0.1', 'do': 'npm install -g neovim' }
 Plug 'snoe/nvim-parinfer.js'
 Plug 'mhartington/oceanic-next'
 Plug 'fmoralesc/vim-tutor-mode'
@@ -108,11 +91,9 @@ Plug 'scrooloose/syntastic'
 Plug 'xolox/vim-notes'
 Plug 'junegunn/vim-emoji'
 Plug 'morhetz/gruvbox'
-Plug 'enricobacis/vim-airline-clock'
 
 " utilities
-"Plug 'dkprice/vim-easygrep'
-Plug 'mhinz/vim-grepper'
+Plug 'dkprice/vim-easygrep'
 
 "clojure
 Plug 'tpope/vim-classpath'
@@ -123,43 +104,28 @@ Plug 'jpalardy/vim-slime'
 Plug 'slim-template/vim-slim'
 Plug 'scrooloose/syntastic'
 
-Plug 'euclio/vim-markdown-composer', { 'do': function('BuildComposer') }
-
-"Plug 'Valloric/YouCompleteMe', { 'do': './install.py' }
-if has('nvim')
-  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-else
-  Plug 'Shougo/deoplete.nvim'
-  Plug 'roxma/nvim-yarp'
-  Plug 'roxma/vim-hug-neovim-rpc'
-endif
+Plug 'Valloric/YouCompleteMe', { 'do': './install.py' }
 
 " Add plugins to &runtimepath
 call plug#end()
 
-" Use deoplete.
-let g:deoplete#enable_at_startup = 1
-
-" use tab to forward cycle
-inoremap <silent><expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
-
 filetype plugin indent on     " Required!
 
 set background=dark
-" autocmd ColorScheme janah highlight Normal ctermbg=235
-colorscheme janah
-" colorscheme OceanicNext
+"autocmd ColorScheme janah highlight Normal ctermbg=235
+colorscheme onedark
 hi Comment cterm=italic
 set t_Co=256
 " in case t_Co alone doesn't work, add this as well:
 let &t_AB="\e[48;5;%dm"
 let &t_AF="\e[38;5;%dm"
-"let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
-"let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
-
-" Airline...
+let g:airline_theme='oceanicnext'
 let g:airline_theme="kalisi"
-let g:airline_section_b = ''
+
+" Numbers and Borders`
+set number
+set guioptions-=L
+set guioptions-=r
 
 "kill bell
 set noerrorbells
@@ -186,6 +152,7 @@ set undodir=~/.vim/undodir
 set undofile
 set undolevels=1000
 set undoreload=10000
+
 
 " hilight indention tabs
 hi NonText ctermfg=darkgrey guifg=#565656
@@ -252,11 +219,6 @@ if has("gui")
   set macmeta "use option (alt) as meta key
 endif
 
-" Nerd space
-
-" Add spaces after comment delimiters by default
-let g:NERDSpaceDelims = 1
-
 " nerd tree cusomiz
 let g:NERDTreeDirArrows = 1
 let g:NERDTreeDirArrowExpandable = '▸'
@@ -268,13 +230,9 @@ function! NERDTreeHighlightFile(extension, fg, bg, guifg, guibg)
  exec 'autocmd filetype nerdtree syn match ' . a:extension .' #^\s\+.*'. a:extension .'$#'
 endfunction
 
-call NERDTreeHighlightFile('js', 'blue', 'none', '#3366FF', '#151515')
-call NERDTreeHighlightFile('tsx', 'blue', 'none', '#3366FF', '#151515')
-call NERDTreeHighlightFile('md', 'green', 'none', 'green', '#151515')
-call NERDTreeHighlightFile('scss', 'green', 'none', 'green', '#151515')
-"call NERDTreeHighlightFile('md', 'blue', 'none', '#3366FF', '#151515')
-"call NERDTreeHighlightFile('jade', 'green', 'none', 'green', '#151515')
+call NERDTreeHighlightFile('jade', 'green', 'none', 'green', '#151515')
 call NERDTreeHighlightFile('ini', 'yellow', 'none', 'yellow', '#151515')
+call NERDTreeHighlightFile('md', 'blue', 'none', '#3366FF', '#151515')
 call NERDTreeHighlightFile('yml', 'yellow', 'none', 'yellow', '#151515')
 call NERDTreeHighlightFile('config', 'yellow', 'none', 'yellow', '#151515')
 call NERDTreeHighlightFile('conf', 'yellow', 'none', 'yellow', '#151515')
@@ -283,7 +241,7 @@ call NERDTreeHighlightFile('html', 'yellow', 'none', 'yellow', '#151515')
 call NERDTreeHighlightFile('styl', 'cyan', 'none', 'cyan', '#151515')
 call NERDTreeHighlightFile('css', 'cyan', 'none', 'cyan', '#151515')
 call NERDTreeHighlightFile('coffee', 'Red', 'none', 'red', '#151515')
-"call NERDTreeHighlightFile('js', 'Red', 'none', '#ff00ff', '#151515')
+call NERDTreeHighlightFile('js', 'Red', 'none', '#ff00ff', '#151515')
 call NERDTreeHighlightFile('php', 'Magenta', 'none', '#ff00ff', '#151515')
 
 "Syntastic Toggle
@@ -315,26 +273,16 @@ set backupskip=/tmp/*,/private/tmp/*
 "Save when losing focus
 "au FocusLost * :wa
 
-" 120 gray bar
-set colorcolumn=120
-
-" Numbers and Borders`
-" no line numbers (do we really need?)
-"set number
-" set nonumber
-set signcolumn=no
-set guioptions-=L  "remove left-hand scroll bar
-set guioptions-=r  "remove right-hand scroll bar
-set guioptions-=m  "remove menu bar
-set guioptions-=T  "remove toolbar
+" 80 gray bar
+set colorcolumn=80
 
 " Tabs, spaces, wrapping {{{
-set tabstop=4
-set shiftwidth=4
-set softtabstop=4
+set tabstop=2
+set shiftwidth=2
+set softtabstop=2
 set expandtab
 set wrap
-set textwidth=120
+set textwidth=80
 set formatoptions=qrn1
 "set colorcolumn=+1
 "}}}
@@ -381,8 +329,6 @@ inoremap <leader>l <C-O>:nohls<CR>
 set wildignore+=classes
 set wildignore+=lib
 
-" Alphabetize SCSS!
-nnoremap <leader>c :g#\({\n\)\@<=#.,/\.*[{}]\@=/-1 sort
 
 " Choosewin
 nmap  -  <Plug>(choosewin)
@@ -404,20 +350,8 @@ tnoremap <Esc> <C-\><C-n>
 let g:ycm_path_to_python_interpreter = '/usr/local/bin/python'
 
 " General search
-"nnoremap <leader>/ :Unite -no-quit -keep-focus grep
 nnoremap <leader>/ :Unite -no-quit -keep-focus grep
 nnoremap <leader>b :Unite -no-split -buffer-name=buffer -start-insert buffer<cr>
-
-let g:unite_source_grep_default_opts = "-iRHn"
-\ . " --exclude='*.svn*'"
-\ . " --exclude='*.svn*'"
-\ . " --exclude='*.log*'"
-\ . " --exclude='*tmp*'"
-\ . " --exclude-dir='**/tmp'"
-\ . " --exclude-dir='CVS'"
-\ . " --exclude-dir='.svn'"
-\ . " --exclude-dir='.git'"
-\ . " --exclude-dir='node_modules'"
 
 " rainbos
 au VimEnter *.clj RainbowParenthesesToggle
@@ -450,26 +384,26 @@ set noea
 
 :let g:session_autoload = 'no'
 
-" fu! CustomFoldText()
-    " "get first non-blank line
-    " let fs = v:foldstart
-    " while getline(fs) =~ '^\s*$' | let fs = nextnonblank(fs + 1)
-    " endwhile
-    " if fs > v:foldend
-        " let line = getline(v:foldstart)
-    " else
-        " let line = substitute(getline(fs), '\t', repeat(' ', &tabstop), 'g')
-    " endif
+fu! CustomFoldText()
+    "get first non-blank line
+    let fs = v:foldstart
+    while getline(fs) =~ '^\s*$' | let fs = nextnonblank(fs + 1)
+    endwhile
+    if fs > v:foldend
+        let line = getline(v:foldstart)
+    else
+        let line = substitute(getline(fs), '\t', repeat(' ', &tabstop), 'g')
+    endif
 
-    " let w = winwidth(0) - &foldcolumn - (&number ? 8 : 0)
-    " let foldSize = 1 + v:foldend - v:foldstart
-    " let foldSizeStr = " " . foldSize . " lines "
-    " let foldLevelStr = repeat("+--", v:foldlevel)
-    " let lineCount = line("$")
-    " let foldPercentage = printf("[%.1f", (foldSize*1.0)/lineCount*100) . "%] "
-    " let expansionString = repeat(".", w - strwidth(foldSizeStr.line.foldLevelStr.foldPercentage))
-    " return line . expansionString . foldSizeStr . foldPercentage . foldLevelStr
-" endf
+    let w = winwidth(0) - &foldcolumn - (&number ? 8 : 0)
+    let foldSize = 1 + v:foldend - v:foldstart
+    let foldSizeStr = " " . foldSize . " lines "
+    let foldLevelStr = repeat("+--", v:foldlevel)
+    let lineCount = line("$")
+    let foldPercentage = printf("[%.1f", (foldSize*1.0)/lineCount*100) . "%] "
+    let expansionString = repeat(".", w - strwidth(foldSizeStr.line.foldLevelStr.foldPercentage))
+    return line . expansionString . foldSizeStr . foldPercentage . foldLevelStr
+endf
 
 " == Auto commands ==
 autocmd BufWritePre * :call s:StripTrailingWhitespaces()                  "Auto-remove trailing spaces
